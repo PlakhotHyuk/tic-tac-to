@@ -4,13 +4,28 @@ public class Game {
     private Player player1;
     private Player player2;
     private Board board;
+    private boolean vsComputer;
 
     public Game() {
         Scanner sc = new Scanner(System.in);
+        System.out.println("Оберіть режим гри:");
+        System.out.println("1. Гравець vs Гравець");
+        System.out.println("2. Гравець vs Комп'ютер");
+        int mode = sc.nextInt();
+        sc.nextLine(); // очистка буфера
+
         System.out.print("Введіть ім'я гравця 1 (X): ");
         player1 = new Player(sc.nextLine(), 'X');
-        System.out.print("Введіть ім'я гравця 2 (O): ");
-        player2 = new Player(sc.nextLine(), 'O');
+
+        if (mode == 2) {
+            player2 = new ComputerPlayer('O');
+            vsComputer = true;
+        } else {
+            System.out.print("Введіть ім'я гравця 2 (O): ");
+            player2 = new Player(sc.nextLine(), 'O');
+            vsComputer = false;
+        }
+
         board = new Board();
     }
 
@@ -20,8 +35,15 @@ public class Game {
 
         while (true) {
             board.printBoard();
-            System.out.print(current.getName() + ", виберіть позицію (1-9): ");
-            int move = sc.nextInt();
+            int move;
+
+            if (current instanceof ComputerPlayer) {
+                System.out.println("Хід комп'ютера...");
+                move = ((ComputerPlayer) current).chooseMove(board);
+            } else {
+                System.out.print(current.getName() + ", виберіть позицію (1-9): ");
+                move = sc.nextInt();
+            }
 
             if (!board.makeMove(move, current.getSymbol())) {
                 System.out.println("Некоректний хід. Спробуйте ще раз.");

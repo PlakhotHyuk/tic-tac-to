@@ -44,4 +44,11 @@ public class Board {
         }
         return true;
     }
+	public boolean isCellFree(int position) {
+    return cells[position - 1] != 'X' && cells[position - 1] != 'O';
+}
+public char[] getCells() {
+    return cells;
+}
+
 }
